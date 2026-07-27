@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agribank | Employee Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-primary: #2e7d32;
+    --green-dark: #1b5e20;
+    --green-light: #4caf50;
+    --gray-bg: #f0f2f5;
+    --nav-bg: #4E4E5A;
+    --white: #ffffff;
+    --text-dark: #1a1a1a;
+    --text-muted: #6b7280;
+    --border: #e0e0e0;
+    --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --red: #c62828;
+    
+    /* ELS Color Palette Matching image_8dca5e.png */
+    --purple-primary: #4a154b;
+    --purple-hover: #360e37;
+    --purple-dark: #310c32;
+    --table-header-color: #333333;
+    
+    /* Login Page Variables matching image design specifications */
+    --login-bg: #f1f4f9;
+    --login-text-main: #1e293b;
+    --login-input-border: #cbd5e1;
+    --login-btn-primary: #28a745;
+    --login-btn-hover: #218838;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { 
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.01em; 
+    background: var(--gray-bg); 
+    color: var(--text-dark); 
+  }
+
+  /* ===== PORTAL LAYOUT ===== */
+  #portal { display: none; flex-direction: column; min-height: 100vh; }
+
+  /* Layout Framework Helpers */
+  .top-menu-area {
+    width: 100%;
+    background: var(--nav-bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .container-fluid { width: 100%; padding-right: 24px; padding-left: 24px; margin-right: auto; margin-left: auto; }
+  .row { display: flex; flex-wrap: wrap; }
+  .col-12 { flex: 0 0 120%; max-width: 120%; }
+  .p-0 { padding: 0 !important; }
+
+  /* Top Navbar Properties */
+  .top-navbar {
+    height: 56px;
+    display: flex;
+    align-items: center;
+  }
+  .top-navbar .container-fluid {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 200%;
+    padding: 0;
+  }
+  .sidebar-brand-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sidebar-brand-icon img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; }
+  .nav-logo span { color: white; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700; }
+  .nav-spacer { flex: 1; }
+  
+  /* User Profile Navigation & Menu Container */
+  .nav-user-container {
+    position: relative;
+  }
+  .nav-user {
+    width: 32px; height: 32px; background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 16px; cursor: pointer; user-select: none;
+    transition: background 0.15s;
+  }
+  .nav-user:hover { background: rgba(255, 255, 255, 0.3); }
+
+  /* Top Right Compact Dropdown Control Layout */
+  .user-dropdown {
+    display: none; position: absolute; top: calc(100% + 8px); right: 0;
+    background: white; border-radius: 4px; width: 160px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 300;
+    border: 1px solid var(--border); padding: 4px 0;
+  }
+  .user-dropdown.show { display: block; }
+  .user-dropdown-item {
+    padding: 10px 16px; font-size: 13px; color: var(--text-dark);
+    cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;
+  }
+  .user-dropdown-item:hover { background: #f5f7f9; color: var(--green-primary); }
+  .user-dropdown-item.logout { color: var(--red); border-top: 1px solid #f0f0f0; margin-top: 4px; padding-top: 12px; }
+  .user-dropdown-item.logout:hover { background: #fff5f5; color: #a61b1b; }
+
+  /* Bottom Navbar Navigation Track */
+  .bottom-navbar {
+  width: 100%;
+}
+.bottom-navbar .container-fluid {
+  display: flex; 
+  align-items: center; 
+  height: 46px;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.1);
+  border-width: 1px 0 0 0;
+  padding: 0;
+}
+
+.menu-item {
+  display: flex; 
+  align-items: center; 
+  gap: 5px;
+  padding: 0 16px; 
+  color: rgba(255,255,255,0.85);
+  font-size: 13px; 
+  font-weight: 500; 
+  cursor: pointer;
+  height: 100%; 
+  transition: all 0.2s; 
+  position: relative; 
+  user-select: none;
+}
+.menu-item:hover, .menu-item.active { 
+  color: #ffffff; 
+  background: rgba(255,255,255,0.08); 
+}
+
+/* --- Refined Compact Dropdown Box to Match image_6bef05.png --- */
+.dropdown-menu {
+  display: none; 
+  position: absolute; 
+  top: 100%; 
+  left: 0;
+  background: #ffffff; 
+  border-radius: 6px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  padding: 20px 24px; 
+  z-index: 200;
+  border: 1px solid #e2e8f0;
+  width: max-content;
+  min-width: 210px;      /* Ensures perfect spacing for text and bullets */
+}
+
+/* JavaScript Flex Toggle handles the layout structure */
+.dropdown-menu.show { 
+  display: flex !important; 
+  flex-direction: column;
+}
+
+.dropdown-column { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 14px;            /* Balances clean vertical breathing room between rows */
+  flex: 1;
+}
+
+/* Custom Dropdown Items */
+.dropdown-item {
+  display: flex; 
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2c3e50;       /* Crisp slate-dark color palette */
+  cursor: pointer;
+  transition: color 0.15s; 
+  text-decoration: none;
+  line-height: 1.2;
+}
+
+/* Clean, custom-spaced bullet dash matching the image file layout */
+.dropdown-item::before { 
+  content: "-"; 
+  margin-right: 12px; 
+  color: #95a5a6;       /* Soft, muted gray for the bullet character */
+  font-weight: bold;
+}
+
+.dropdown-item:hover { 
+  color: #16a085;       /* Sharp, professional interactive green highlight tint */
+}
+
+  /* ===== PORTAL MAIN CONTENT ===== */
+  .content { flex: 1; padding: 20px 24px; display: flex; gap: 20px; max-width: 100%; }
+  .main-content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+  .sidebar { width: 320px; flex-shrink: 0; display: flex; flex-direction: column; gap: 20px; }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* Unified Panel Layout */
+  .card {
+    background: white; border-radius: 4px;
+    box-shadow: var(--card-shadow); padding: 24px;
+    border: 1px solid var(--border);
+  }
+  .card-title {
+    font-size: 14px; font-weight: 700; color: var(--text-dark);
+    margin-bottom: 20px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+
+  /* Bulletin Board Grid */
+  .bulletin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .bulletin-item { text-align: center; }
+  .bulletin-img {
+    width: 100%; aspect-ratio: 16/11; border-radius: 4px; overflow: hidden;
+    border: 1px solid var(--border); margin-bottom: 12px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: #f7f9fa; font-size: 13px; font-weight: 600; color: #333; padding: 16px;
+  }
+  .bulletin-img.green-card { background: linear-gradient(135deg, #f5f7f5, #f4f5f4); color: rgb(12, 12, 12); }
+  .bulletin-name { font-size: 12px; font-weight: 700; color: var(--text-dark); text-transform: uppercase; letter-spacing: 0.5px; }
+  .read-more { font-size: 11px; color: var(--text-muted); cursor: pointer; margin-top: 6px; }
+  .bulletin-dots { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: #ced4da; cursor: pointer; }
+  .dot.active { background: #6c757d; }
+
+  /* Grid Layout for Bottom Pending Area */
+  .approvals-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .approval-block h4 { font-size: 13px; font-weight: 700; color: var(--text-dark); padding-bottom: 8px; margin-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .approval-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: 12px; color: var(--text-muted); }
+  .badge { background: #e0f2f1; color: #004d40; border-radius: 12px; padding: 2px 10px; font-size: 11px; font-weight: 700; }
+  .badge.zero { background: #f5f5f5; color: #9e9e9e; }
+
+  /* Advisories Component */
+  .advisory-item { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid #f8f9fa; }
+  .advisory-item:last-child { border-bottom: none; }
+  .adv-icon { font-size: 18px; line-height: 1; }
+  .adv-title { font-size: 12px; font-weight: 700; color: var(--text-dark); }
+  .adv-desc { 
+    font-size: 13px; 
+    color: var(--text-muted); 
+    line-height: 1.5; 
+    margin-top: 4px; 
+  }
+  .ratings-box { text-align: center; padding: 12px 0; color: var(--text-muted); font-size: 12px; }
+
+  /* Profile Management */
+  .profile-header { display: flex; align-items: center; gap: 20px; margin-bottom: 24px; }
+  .avatar-large {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--nav-bg); display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700; color: white;
+  }
+  .info-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+  .info-field { padding: 12px 16px; background: var(--gray-bg); border-radius: 4px; }
+  .info-field label { 
+    font-size: 10px; 
+    color: var(--text-muted); 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    display: block; 
+    margin-bottom: 4px; 
+    letter-spacing: 0.03em;
+  }
+  .info-field span { 
+    font-size: 14px; 
+    font-weight: 600; 
+    color: var(--text-dark); 
+  }
+
+  /* ===== INTERACTIVE ACTION MODAL ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4); z-index: 1000;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: white; border-radius: 6px; width: 460px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden;
+  }
+  .modal-header {
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal-header h3 { font-size: 14px; font-weight: 700; color: var(--text-dark); }
+  .modal-close { background: none; border: none; font-size: 16px; cursor: pointer; color: var(--text-muted); }
+  .modal-body { padding: 20px; }
+  .modal-form-group { margin-bottom: 14px; }
+  .modal-form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: var(--text-dark); }
+  .modal-form-group input, .modal-form-group textarea { 
+    width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; outline: none;
+  }
+  .modal-form-group textarea { height: 80px; resize: vertical; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+  .btn-primary { background: var(--green-primary); color: white; border: none; border-radius: 4px; padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .btn-secondary { background: white; color: var(--text-dark); border: 1px solid var(--border); border-radius: 4px; padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer; }
+
+  .toast {
+    display: none; position: fixed; bottom: 24px; right: 24px;
+    background: #333; color: white; border-radius: 4px;
+    padding: 12px 20px; font-size: 13px; font-weight: 500; z-index: 2000;
+  }
+  .toast.show { display: block; }
+
+  /* ==========================================================================
+     ELECTRONIC LIBRARY SYSTEM SPECIFIC STYLES (Matching image_8dca5e.png Layout)
+     ========================================================================== */
+  .els-breadcrumb {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+  .els-breadcrumb span.parent { color: #4e73df; }
+  .els-breadcrumb span.divider { margin: 0 4px; }
+
+  .els-card {
+    background: #ffffff;
+    border-radius: 4px;
+    border: 1px solid #e3e6f0;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.05);
+    padding: 20px;
+  }
+  .els-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e3e6f0;
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+  }
+  .els-header h2 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--purple-primary);
+    letter-spacing: 0.5px;
+  }
+  .els-btn {
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    color: #ffffff;
+    transition: background-color 0.1s ease;
+  }
+  .els-btn-purple { background-color: var(--purple-primary); }
+  .els-btn-purple:hover { background-color: var(--purple-hover); }
+  .els-btn-dark { background-color: var(--purple-dark); }
+  .els-btn-dark:hover { background-color: #1f0520; }
+
+  .els-filter-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    border-bottom: 1px solid #f2f2f2;
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+  }
+  .els-select-group {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 440px;
+  }
+  .els-control-element {
+    width: 100%;
+    height: 34px;
+    padding: 4px 10px;
+    font-size: 13px;
+    color: #495057;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    outline: none;
+  }
+  .els-control-element:focus { border-color: #bac8f3; }
+
+  .els-table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 13px;
+    color: #333;
+  }
+  .els-entries select { width: auto; height: 28px; padding: 2px; margin: 0 4px; }
+  .els-search { display: flex; align-items: center; gap: 6px; }
+  .els-search input { width: 170px; height: 28px; padding: 4px 8px; border: 1px solid #ced4da; border-radius: 4px; outline: none;}
+
+  .els-table-wrapper { width: 100%; overflow-x: auto; margin-bottom: 15px; }
+  .els-table { width: 100%; border-collapse: collapse; text-align: left; border: 1px solid #dee2e6; }
+  .els-table th {
+    background-color: #ffffff;
+    color: var(--table-header-color);
+    font-weight: 600;
+    padding: 10px;
+    border-top: 1px solid #dee2e6;
+    border-bottom: 2px solid #dee2e6;
+    font-size: 13px;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .els-table th::after { content: ' ⇅'; font-size: 10px; color: #bbb; float: right; margin-left: 4px; }
+  .els-table td { padding: 10px; border-bottom: 1px solid #dee2e6; color: #495057; font-size: 13px; vertical-align: middle; }
+  .els-table tr:hover td { background-color: #f8f9fc; }
+  .els-empty-msg { text-align: center; color: #777; padding: 20px !important; }
+  
+  .els-action-btn { padding: 3px 8px; font-size: 11px; background-color: #4e73df; color: white; border: none; border-radius: 3px; cursor: pointer; }
+  .els-badge { background-color: #6c757d; color: white; padding: 2px 6px; font-size: 11px; border-radius: 4px; font-weight: 600; }
+
+  .els-footer-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin-top: 15px; }
+  .els-pagination { display: flex; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; }
+  .els-page-btn { background: #fff; border: none; border-right: 1px solid #ddd; padding: 5px 12px; color: #4e73df; cursor: pointer; font-size: 13px; }
+  .els-page-btn:last-child { border-right: none; }
+  .els-page-btn.disabled { color: #858796; cursor: not-allowed; opacity: 0.6; background: #ffffff; }
+  .els-page-btn:hover:not(.disabled) { background-color: #eaecf4; color: #2e59d9; }
+
+  .els-bottom-branding { margin-top: 20px; padding: 16px 20px; background: white; border: 1px solid #e3e6f0; border-radius: 4px; font-size: 13px; color: #333; }
+
+  /* Add Library View Form Styling */
+  .els-form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 10px; }
+  .els-form-group { display: flex; flex-direction: column; gap: 6px; }
+  .els-form-group.full-width { grid-column: span 2; }
+  .els-form-group label { font-size: 12px; font-weight: 600; color: #333; }
+  .els-form-group input, .els-form-group select, .els-form-group textarea {
+    padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px; outline: none; font-family: inherit;
+  }
+  .els-form-group textarea { height: 90px; resize: vertical; }
+  .els-form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; border-top: 1px solid #e3e6f0; padding-top: 15px; }
+
+  @media (max-width: 1024px) {
+    .content { flex-direction: column; }
+    .sidebar { width: 100%; }
+    .bulletin-grid, .approvals-row { grid-template-columns: 1fr; }
+    .dropdown-menu { position: static; width: 100% !important; flex-direction: column; gap: 20px; box-shadow: none; padding: 16px; }
+    .els-form-grid { grid-template-columns: 1fr; }
+    .els-form-group.full-width { grid-column: span 1; }
+  }
+
+  /* ===== EMPLOYEE PORTAL LOGIN PAGE (merged, unchanged design) ===== */
+  :root{
+    --green-900:#173D1E;
+    --green-800:#1F5C2B;
+    --green-700:#2A7A3B;
+    --green-600:#38924A;
+    --gold-500:#E8B62C;
+    --ink-900:#1E2621;
+    --ink-600:#5B6B60;
+    --ink-400:#8A978D;
+    --line:#DEDCD5;
+    --panel-bg:#F1EEE9;
+    --red-500:#D9455C;
+    --purple-500:#7B4FC9;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    color:var(--ink-900);
+    height:100vh;
+    overflow:hidden;
+  }
+  a{color:inherit;}
+
+  .app{
+    display:flex;
+    height:100vh;
+  }
+
+  /* ============ LEFT: FULL-BLEED AUTO-SLIDING PICTURE ============ */
+  .media{
+    flex:1 1 66%;
+    width:66%;
+    height:100vh;
+    position:relative;
+    overflow:hidden;
+    background:#f4f7f5;
+  }
+  .media-track{
+    display:flex;
+    height:100%;
+    align-items:center; /* Keeps shorter images vertically centered */
+    transition: transform .8s cubic-bezier(.65,0,.35,1);
+  }
+  .media-track img{
+    flex:0 0 100%;
+    width:100%;
+    height:100%;
+    /* 'contain' ensures the full image is visible without cropping any text/edges */
+    object-fit:contain;
+    padding:24px; /* Inner margin to prevent images from touching screen edges */
+    display:block;
+  }
+  .media-dots{
+    position:absolute;
+    left:50%;
+    bottom:22px;
+    transform:translateX(-50%);
+    display:flex;
+    gap:7px;
+    z-index:3;
+  }
+  .media-dots span{
+    width:7px;height:7px;border-radius:50%;
+    background:rgba(255,255,255,0.45);
+    transition: background .3s ease, transform .3s ease;
+    cursor:pointer;
+  }
+  .media-dots span.active{
+    background:#fff;
+    transform:scale(1.3);
+  }
+
+  /* ============ RIGHT: LOGIN PANEL ============ */
+  .panel{
+    flex:0 0 34%;
+    width:34%;
+    min-width:380px;
+    max-width:440px;
+    height:100vh;
+    background:var(--panel-bg);
+    display:flex;
+    flex-direction:column;
+    padding:34px 34px 26px;
+    overflow-y:auto;
+    border-left:1px solid var(--line);
+  }
+
+  /* Brand container styling */
+  .brand{
+    display:flex;
+    align-items:center;
+    margin-bottom:30px;
+    width:100%;
+  }
+  
+  /* Fixed sizing for full logo image */
+  .brand-logo{
+    max-height:px;
+    width:auto;
+    max-width:100%;
+    object-fit:contain;
+    display:block;
+  }
+
+  .portal-title{
+    font-size:16px;
+    font-weight:700;
+    color:var(--ink-900);
+    margin:0 0 20px;
+  }
+
+  .field-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:14px;
+  }
+  .field-row label{
+    flex:0 0 78px;
+    font-size:13px;
+    font-weight:500;
+    color:var(--ink-900);
+  }
+  .field-row input{
+    flex:1;
+    padding:9px 12px;
+    border:1.3px solid var(--line);
+    border-radius:5px;
+    font-size:13.5px;
+    font-family:'Inter',sans-serif;
+    color:var(--ink-900);
+    background:#fff;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .field-row input:focus{
+    outline:none;
+    border-color:var(--green-600);
+    box-shadow:0 0 0 3px rgba(56,146,74,0.15);
+  }
+
+  .show-pass-row{
+    display:flex;
+    justify-content:flex-end;
+    margin:-6px 0 18px;
+  }
+  .show-pass-row button{
+    background:none;
+    border:none;
+    padding:0;
+    font-size:11.5px;
+    color:var(--green-700);
+    font-weight:600;
+    cursor:pointer;
+    text-decoration:underline;
+  }
+  .show-pass-row button:hover{ color:var(--green-800); }
+  .show-pass-row button:focus-visible{ outline:2px solid var(--green-600); outline-offset:2px; }
+
+  .btn-login{
+    width:100%;
+    padding:11px;
+    border:none;
+    border-radius:6px;
+    background:var(--green-700);
+    color:#fff;
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:14px;
+    letter-spacing:0.2px;
+    cursor:pointer;
+    margin-bottom:22px;
+    transition: filter .12s ease, transform .12s ease;
+  }
+  .btn-login:hover{ filter:brightness(1.08); transform:translateY(-1px); }
+  .btn-login:focus-visible{ outline:2px solid var(--gold-500); outline-offset:3px; }
+  .btn-login:active{ transform:translateY(0); }
+
+  .advisories{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:16px 18px 18px;
+    flex:1;
+  }
+  .advisories h4{
+    font-size:14px;
+    font-weight:700;
+    margin:0 0 2px;
+    color:var(--ink-900);
+  }
+  .advisories .caption{
+    text-align:center;
+    font-size:11px;
+    color:var(--ink-400);
+    font-weight:600;
+    letter-spacing:0.3px;
+    padding-bottom:10px;
+    margin-bottom:12px;
+    border-bottom:1px solid var(--line);
+  }
+  .advisory-item{
+    display:flex;
+    gap:11px;
+    margin-bottom:15px;
+  }
+  .advisory-item:last-child{ margin-bottom:0; }
+  .advisory-item .dot{
+    flex-shrink:0;
+    width:20px; height:20px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    color:#fff;
+    font-size:11px;
+    font-weight:700;
+    margin-top:1px;
+  }
+  .advisory-item .dot.red{ background:var(--red-500); }
+  .advisory-item .dot.purple{ background:var(--purple-500); }
+  .advisory-item b{
+    display:block;
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--ink-900);
+    margin-bottom:2px;
+  }
+  .advisory-item span{
+    font-size:12px;
+    line-height:1.5;
+    color:var(--ink-600);
+  }
+
+  .concern-text{
+    text-align:center;
+    font-size:12.5px;
+    color:var(--ink-900);
+    margin-top:20px;
+  }
+  .concern-text a{
+    color:var(--green-700);
+    font-weight:700;
+    text-decoration:underline;
+  }
+  .concern-text a:hover{ color:var(--green-800); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; }
+    .media-track{ transition:none; }
+  }
+
+  @media (max-width: 900px){
+    html,body{ height:auto; overflow:auto; }
+    .app{ flex-direction:column-reverse; height:auto; }
+    .panel{ flex:1 1 auto; width:100%; max-width:100%; min-width:auto; height:auto; border-left:none; }
+    .media{ flex:0 0 auto; width:100%; height:380px; }
+  }
+
+  body.portal-active { overflow: auto; height: auto; }
+</style>
+</head>
+<body>
+
+<!-- ============ EMPLOYEE PORTAL LOGIN PAGE (merged, unchanged design) ============ -->
+
+<div class="app" id="login-page">
+
+  <!-- ============ LEFT: FULL-BLEED AUTO-SLIDING PICTURE ============ -->
+  <section class="media" aria-label="Announcements">
+    <div class="media-track" id="mediaTrack">
+      <img src="D:\Users\Lenovo\Downloads\ChatGPT Image Jul 23, 2026, 05_33_12 PM.png" alt="Scam Warning Advisory">
+      <img src= "D:\Users\Lenovo\Downloads\ChatGPT Image Jul 23, 2026, 05_24_35 PM.png" alt="Copy-Paste Advisory">
+      <img src="D:\Users\Lenovo\Downloads\Untitled design (10).png" alt="Agribank Announcement">
+    </div>
+    <!-- Fixed dot count to match 3 image slides -->
+    <div class="media-dots" id="mediaDots">
+      <span class="active" onclick="goTo(0)"></span>
+      <span onclick="goTo(1)"></span>
+      <span onclick="goTo(2)"></span>
+    </div>
+  </section>
+
+  <!-- ============ RIGHT: LOGIN PANEL ============ -->
+  <aside class="panel" aria-label="Employee login">
+
+    <div class="brand">
+      <img src="C:\Users\Lenovo\OneDrive - AGRIBUSINESS RURAL BANK INC\Desktop\CHRISTIAN ULAYAN FILES\AGRIB LOGOS\OneDrive_1_6-5-2025_1\FULL COLOR\ABC-RB  - APPROVED  LOGO - FULL COLOR-01.png" alt="Agribank Logo" class="brand-logo">
+    </div>
+
+    <div class="portal-title">Employee Portal</div>
+
+    <form id="loginForm">
+      <div class="field-row">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" autocomplete="username" required>
+      </div>
+      <div class="field-row">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+      </div>
+      <div class="show-pass-row">
+        <button type="button" id="toggleVis">Show Password</button>
+      </div>
+
+      <p class="login-error" id="login-error" style="display:none; color:var(--red-500); font-size:12.5px; margin:-6px 0 14px;">Invalid username or password.</p>
+
+      <button type="submit" class="btn-login">Log in</button>
+    </form>
+
+    <div class="advisories">
+      <h4>Advisories</h4>
+      <div class="caption">News &amp; Tips</div>
+
+      <div class="advisory-item">
+        <div class="dot red">!</div>
+        <div>
+          <b>Daily Security Reminder</b>
+          <span>Your account, your responsibility &mdash; never share it with others.</span>
+        </div>
+      </div>
+      <div class="advisory-item">
+        <div class="dot purple">i</div>
+        <div>
+          <b>ABI 2.0 Stickers</b>
+          <span>Spice up your chats! Use ABI's Sticker Packs to express, engage, and enjoy every Viber convo!</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="concern-text">Do you have a concern? Submit a ticket @ <a href="https://helpdesk.agribank.com.ph/User/Login" target="_blank" rel="noopener">IT Helpdesk</a></p>
+
+  </aside>
+
+</div>
+
+<script>
+  // password show/hide
+  const toggleBtn = document.getElementById('toggleVis');
+  const pwd = document.getElementById('password');
+  toggleBtn.addEventListener('click', () => {
+    const show = pwd.type === 'password';
+    pwd.type = show ? 'text' : 'password';
+    toggleBtn.textContent = show ? 'Hide Password' : 'Show Password';
+  });
+
+  document.getElementById('loginForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    doLogin();
+  });
+
+  // auto-sliding announcement picture
+  const track = document.getElementById('mediaTrack');
+  const dots = document.querySelectorAll('#mediaDots span');
+  const slideCount = track.children.length;
+  let current = 0;
+  
+  function goTo(i){
+    current = i;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dots.forEach((d, idx) => d.classList.toggle('active', idx === current));
+  }
+  
+  setInterval(() => {
+    goTo((current + 1) % slideCount);
+  }, 4000);
+</script>
+
+<!-- Main System Portal Wrapper -->
+<div id="portal">
+  <!-- ===== TWO-TIER HORIZONTAL MENU SYSTEM ===== -->
+  <div class="top-menu-area">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="horizontal-menu">
+            
+            <!-- Top Navbar: Brand & Profile -->
+            <nav class="navbar top-navbar p-0">
+              <div class="container-fluid">
+                <div class="sidebar-brand-icon">
+                  <img src="C:\Users\Lenovo\OneDrive - AGRIBUSINESS RURAL BANK INC\Desktop\CHRISTIAN ULAYAN FILES\AGRIB LOGOS\OneDrive_1_6-5-2025_1\FULL COLOR\ABC-RB  - APPROVED  LOGO - FULL COLOR-04.png" alt="Portal Logo"/>
+                </div>
+                <div class="nav-logo">
+                  <span>Employee Portal</span>
+                </div>
+                <div class="nav-spacer"></div>
+                
+                <!-- Profile Action Menu Container -->
+                <div class="nav-user-container">
+                  <div class="nav-user" onclick="toggleUserDropdown(event)" title="Account Menu">👤</div>
+                  <div class="user-dropdown" id="user-dropdown">
+                    <div class="user-dropdown-item" onclick="showPage('profile')">My Profile</div>
+                    <div class="user-dropdown-item logout" onclick="doLogout()">Sign Out</div>
+                  </div>
+                </div>
+
+              </div>
+            </nav>
+            
+            <!-- Bottom Navbar: Navigation Menus & Mega Dropdowns -->
+            <nav class="bottom-navbar">
+              <div class="container-fluid">
+                
+                <div class="menu-item active" id="menu-dashboard" onclick="showPage('dashboard')">
+                  Dashboard
+                </div>
+
+                <!-- Integrated ELS Core System Navigation Node -->
+                <div class="menu-item" id="menu-library" onclick="showPage('library')">
+                  Library
+                </div>
+                
+
+                <div class="menu-item" id="menu-eforms" onmouseenter="showDropdown('eforms-dd')" onmouseleave="hideDropdown('eforms-dd')">
+                  Maintenance ▾
+                  <div class="dropdown-menu eforms-mega" id="eforms-dd">
+                    <div class="dropdown-column">
+                      <div class="dropdown-item" onclick="openFormModal('Travel Order Request')">Document Type</div>
+                      <div class="dropdown-item" onclick="openFormModal('Travel Order Approval')">Event Type</div>
+                    </div>                 
+                  </div>
+                </div>
+
+              </div>
+            </nav>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary System Interface Dashboard/Profile Content -->
+  <div class="content">
+    <div class="main-content">
+      
+      <!-- VIEW 1: DASHBOARD PAGE -->
+      <div class="page active" id="page-dashboard">
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="card-title">Bulletin Board</div>
+          <div class="bulletin-grid">
+            <div class="bulletin-item">
+              <div class="bulletin-img green-card">
+                <p style="font-weight: 700; margin-bottom: 4px;">Digital Banking</p>
+                <p style="font-size: 11px; opacity: 0.9;">Sample Ads</p>
+              </div>
+              <div class="bulletin-name">Title</div>
+              <div class="read-more">read more</div>
+            </div>
+            <div class="bulletin-item">
+              <div class="bulletin-img green-card">
+                <p style="font-weight: 700; margin-bottom: 4px;">Digital Banking</p>
+                <p style="font-size: 11px; opacity: 0.9;">Sample Ads</p>
+              </div>
+              <div class="bulletin-name">Title</div>
+              <div class="read-more">read more</div>
+            </div>
+            <div class="bulletin-item">
+              <div class="bulletin-img green-card">
+                <p style="font-weight: 700; margin-bottom: 4px;">Digital Banking</p>
+                <p style="font-size: 11px; opacity: 0.9;">Sample Ads</p>
+              </div>
+              <div class="bulletin-name">Title</div>
+              <div class="read-more">read more</div>
+            </div>
+          </div>
+          <div class="bulletin-dots">
+            <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="approvals-row">
+            <div class="approval-block">
+              <h4>Approvals</h4>
+              <div class="approval-row"><span>AKK</span><span class="badge zero">0</span></div>
+              <div class="approval-row"><span>Travel Order</span><span class="badge">0</span></div>
+              <div class="approval-row"><span>TICRO</span><span class="badge zero">0</span></div>
+              <div class="approval-row"><span>DPEAF</span><span class="badge">0</span></div>
+            </div>
+            <div class="approval-block">
+              <h4>Personnel</h4>
+              <div class="approval-row"><span>AKK</span><span class="badge zero">0</span></div>
+              <div class="approval-row"><span>Direct Reports</span><span class="badge">0</span></div>
+              <div class="approval-row"><span>Leave Requests</span><span class="badge zero">0</span></div>
+            </div>
+            <div class="approval-block">
+              <h4>Acknowledgement</h4>
+              <div class="approval-row"><span>AKK</span><span class="badge zero">0</span></div>
+              <div class="approval-row"><span>Announcements</span><span class="badge">0</span></div>
+              <div class="approval-row"><span>Policies</span><span class="badge zero">0</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 2: ELECTRONIC LIBRARY SYSTEM PAGE (image_8dca5e.png) -->
+      <div class="page" id="page-library">
+        <div class="els-breadcrumb">
+          <span class="parent">Dashboard</span> <span class="divider">/</span> <span class="current">Library</span>
+        </div>
+        
+        <div class="els-card">
+          <div class="els-header">
+            <h2>LIBRARY LIST</h2>
+            <button class="els-btn els-btn-purple" onclick="switchToLibraryView('add-library-form')">Add Library</button>
+          </div>
+          
+          <!-- Filters Toolbar Area -->
+          <div class="els-filter-row">
+            <div class="els-select-group">
+              <select id="elsDocType" class="els-control-element">
+                <option value="Document type">Document Type</option>
+                <option value="Department">Department</option>
+                <option value="Department">My Records</option>
+              </select>
+              <select id="elsStatus" class="els-control-element">
+                <option value="ALL">ALL</option>
+                <option value="ABANTE PAST DUE ACCOUNTS VISITATION ACCOMPLISHMENT REPORT">ABANTE PAST DUE ACCOUNTS VISITATION ACCOMPLISHMENT REPORT</option>
+                <option value="ACCOMPLISHMENT REPORT">ACCOMPLISHMENT REPORT</option>
+                <option value="AMENDED ARTICLES OF CONSOLIDATION">AMENDED ARTICLES OF CONSOLIDATION</option>
+                <option value="AMENDED PLAN OF CONSOLIDATION">AMENDED PLAN OF CONSOLIDATION</option>
+                <option value="APPROVED TICRO">APPROVED TICRO</option>
+                <option value="ARTICLES OF INCORPORATION">ARTICLES OF INCORPORATION</option>
+                <option value="ASPAH">ASPAH</option>
+                <option value="AUDITED FINANCIAL STATEMENT">AUDITED FINANCIAL STATEMENT</option>
+                <option value="BILLING AND CERTIFICATION REPORTS">BILLING AND CERTIFICATION REPORTS</option>
+                <option value="BRANCH DIRECTORY">BRANCH DIRECTORY</option>
+                <option value="BRANCH GENERAL CLEANING">BRANCH GENERAL CLEANING</option>
+                <option value="BRANCH VISITS DOCUMENTATION">BRANCH VISITS DOCUMENTATION</option>
+                <option value="BRANCHING ACTIVITIES REGARDING RELOCATIONS">BRANCHING ACTIVITIES REGARDING RELOCATIONS</option>
+                <option value="BRANCHING DOCUMENTATION">BRANCHING DOCUMENTATION</option>
+                <option value="BRANCHING DOCUMENTS">BRANCHING DOCUMENTS</option>
+                <option value="BSP RESPONSE">BSP RESPONSE</option>
+                <option value="BUREAU OF INTERNAL REVENUE TAX RETURNS">BUREAU OF INTERNAL REVENUE TAX RETURNS</option>
+                <option value="BUSINESS MODEL">BUSINESS MODEL</option>
+              </select>
+            </div>
+            <button class="els-btn els-btn-dark" onclick="triggerLoadLibraryData()">Load</button>
+          </div>
+
+          <!-- Live Tabular Entry Controls -->
+          <div class="els-table-controls">
+            <div class="els-entries">
+              Show 
+              <select>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+              </select> 
+              entries
+            </div>
+            <div class="els-search">
+              <label for="elsSearchInput">Search:</label>
+              <input type="search" id="elsSearchInput" oninput="filterLibraryTable(this.value)">
+            </div>
+          </div>
+
+          <!-- Document Results Grid Table -->
+          <div class="els-table-wrapper">
+            <table class="els-table">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th>Document Type</th>
+                  <th>Title</th>
+                  <th>Reference Number</th>
+                  <th>Department</th>
+                  <th>Date of Approval/Issuance</th>
+                  <th>Tags</th>
+                  <th>Created By</th>
+                </tr>
+              </thead>
+              <tbody id="elsTableBody">
+                <tr class="els-empty-row">
+                  <td colspan="8" class="els-empty-msg">No data available in table</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Table Information Footer row context tracking status updates -->
+          <div class="els-footer-row">
+            <div id="elsTableInfo">Showing 0 to 0 of 0 entries</div>
+            <div class="els-pagination">
+              <button id="elsPrevBtn" class="els-page-btn disabled" disabled>Previous</button>
+              <button id="elsNextBtn" class="els-page-btn disabled" disabled>Next</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Footnote Tracking Node matching requirements inside image_8dca5e.png -->
+        <div class="els-bottom-branding">
+          AGRIBUSINESS RURAL BANK, INC. | Electronic Library System
+        </div>
+      </div>
+
+      <!-- VIEW 3: ADD NEW LIBRARY ARCHIVE ENTRY PAGE -->
+      <div class="page" id="page-add-library-form">
+        <div class="els-breadcrumb">
+          <span class="parent">Dashboard</span> <span class="divider">/</span> <span class="parent" style="cursor:pointer" onclick="showPage('library')">Library</span> <span class="divider">/</span> <span class="current">Create Form</span>
+        </div>
+
+        <div class="els-card">
+          <div class="els-header">
+            <h2>ADD NEW LIBRARY DOCUMENT</h2>
+          </div>
+
+          <form id="newLibraryRecordForm" onsubmit="handleCreateLibraryRecord(event)">
+            <div class="els-form-grid">
+              <div class="els-form-group">
+                <label>Document Type *</label>
+                <select id="formDocType" required>
+                  <option value="" disabled selected>Select dynamic document structural type</option>
+                  <option value="Policy">Policy</option>
+                  <option value="Memo">Memorandum</option>
+                  <option value="Manual">User Manual</option>
+                  <option value="Form">Standard Form</option>
+                </select>
+              </div>
+
+              <div class="els-form-group">
+                <label>Reference Number *</label>
+                <input type="text" id="formRefNum" placeholder="e.g. AGB-POL-2026-005" required>
+              </div>
+
+              <div class="els-form-group full-width">
+                <label>Document Title *</label>
+                <input type="text" id="formTitle" placeholder="Enter complete metadata file title name" required>
+              </div>
+
+              <div class="els-form-group">
+                <label>Department Owner *</label>
+                <input type="text" id="formDept" placeholder="e.g. Compliance Department" required>
+              </div>
+
+              <div class="els-form-group">
+                <label>Date of Approval/Issuance *</label>
+                <input type="date" id="formDate" required>
+              </div>
+
+              <div class="els-form-group full-width">
+                <label>Tags / Content Identifiers (Comma-separated)</label>
+                <input type="text" id="formTags" placeholder="e.g. Audit, Regulatory, Operational Guidance">
+              </div>
+            </div>
+
+            <div class="els-form-actions">
+              <button type="button" class="btn-secondary" style="padding: 6px 14px;" onclick="showPage('library')">Cancel and Return</button>
+              <button type="submit" class="els-btn els-btn-purple">Save Document Record</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="els-bottom-branding">
+          AGRIBUSINESS RURAL BANK, INC. | Electronic Library System
+        </div>
+      </div>
+
+      <!-- VIEW 4: USER PROFILE PAGE -->
+      <div class="page" id="page-profile">
+        <div class="card">
+          <div class="profile-header">
+            <div class="avatar-large">CB</div>
+            <div>
+              <h2 style="font-size: 18px; font-weight: 700;">Carlo B. Bulayan</h2>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Loans Department · Head Office</p>
+            </div>
+          </div>
+          <div class="info-grid">
+            <div class="info-field"><label>Full Name</label><span>Christian Ulayan</span></div>
+            <div class="info-field"><label>Department</label><span>IT Department</span></div>
+            <div class="info-field"><label>Position</label><span>IT Support</span></div>
+            <div class="info-field"><label>Email</label><span>cbulayan@agribank.com.ph</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Static Sidebar Track Layout -->
+    <div class="sidebar">
+      <div class="card">
+        <div class="card-title">Advisories</div>
+        <div class="advisory-item">
+          <div class="adv-icon">⚠️</div>
+          <div>
+            <div class="adv-title">DAILY SECURITY REMINDER</div>
+            <div class="adv-desc">Cybersecurity is everyone's role. Isang maling click — pwedeng makaapekto sa buong organization.</div>
+          </div>
+        </div>
+        <div class="advisory-item">
+          <div class="adv-icon">💬</div>
+          <div>
+            <div class="adv-title">ABI 2.0 Stickers</div>
+            <div class="adv-desc">Spice up your chats! Use ABI's Sticker Packs to express, engage, and enjoy every VIBER convo!</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Everybody Rates Everybody</div>
+        <div class="ratings-box">** No rating available **</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Global Portal Action Modal Panels -->
+<div class="modal-overlay" id="generic-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="generic-modal-title">Form Input</h3>
+      <button class="modal-close" onclick="closeModal('generic-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="generic-modal-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Form process updated successfully!</div>
+
+<script>
+  // Dynamic Library Memory Cache Storage Architecture 
+  let libraryDatabase = [
+    { id: 1, type: "Policy", title: "Information Security Management Guidelines", refNo: "AGB-POL-2026-012", dept: "IT Security", date: "2026-02-14", tags: "Security, Cyber", author: "Christian Ulayan" },
+    { id: 2, type: "Memo", title: "Transition Protocol to Portal App V2", refNo: "AGB-MEM-2026-089", dept: "Operations", date: "2026-04-10", tags: "Deployment", author: "Carlo Bulayan" },
+    { id: 3, type: "Manual", title: "Kiosk Integration Operations Handbook", refNo: "AGB-MNL-004", dept: "IT Support", date: "2026-05-19", tags: "Systems", author: "Fritz Principe" }
+  ];
+
+  let hasLoadedLibraryData = false;
+
+  function doLogin() {
+    const u = document.getElementById('username').value.trim();
+    const p = document.getElementById('password').value.trim();
+    if (u === 'admin' && p === 'admin') {
+      document.getElementById('login-page').style.display = 'none';
+      document.getElementById('portal').style.display = 'flex';
+      document.getElementById('login-error').style.display = 'none';
+      document.body.classList.add('portal-active');
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+    }
+  }
+
+  function doLogout() {
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('portal').style.display = 'none';
+    document.getElementById('login-page').style.display = 'flex';
+    document.getElementById('user-dropdown').classList.remove('show');
+    document.body.classList.remove('portal-active');
+    showPage('dashboard');
+  }
+
+  function toggleUserDropdown(event) {
+    event.stopPropagation();
+    document.getElementById('user-dropdown').classList.toggle('show');
+  }
+
+  document.addEventListener('click', function() {
+    document.getElementById('user-dropdown').classList.remove('show');
+  });
+
+  // Comprehensive Unified View-State Dynamic Routing Engine
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+    
+    const pageEl = document.getElementById('page-' + pageId);
+    if (pageEl) pageEl.classList.add('active');
+    
+    const menuEl = document.getElementById('menu-' + pageId);
+    if (menuEl) menuEl.classList.add('active');
+    
+    // Toggle sidebar display based on whether the dashboard is active
+    const sidebarEl = document.querySelector('.sidebar');
+    if (sidebarEl) {
+      if (pageId === 'dashboard') {
+        sidebarEl.style.display = 'block'; // Or 'flex' depending on your layout style
+      } else {
+        sidebarEl.style.display = 'none';
+      }
+    }
+
+    closeAllDropdowns();
+  }
+
+  // Helper route router for multi-nested forms transitions cleanly
+  function switchToLibraryView(subViewId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + subViewId).classList.add('active');
+  }
+
+  function showDropdown(id) {
+    closeAllDropdowns();
+    document.getElementById(id).classList.add('show');
+  }
+  
+  function hideDropdown(id) {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el && !el.matches(':hover') && !el.parentElement.matches(':hover')) {
+        el.classList.remove('show');
+      }
+    }, 200);
+  }
+  
+  function closeAllDropdowns() {
+    document.querySelectorAll('.dropdown-menu').forEach(d => d.classList.remove('show'));
+  }
+
+  document.querySelectorAll('.dropdown-menu').forEach(dd => {
+    dd.addEventListener('mouseleave', () => dd.classList.remove('show'));
+  });
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('show');
+  }
+
+  /* ==========================================================================
+     ELECTRONIC LIBRARY SYSTEM CONTROLLER FUNCTIONALITY (image_8dca5e.png)
+     ========================================================================== */
+  function triggerLoadLibraryData() {
+    hasLoadedLibraryData = true;
+    renderLibraryTableGrid(libraryDatabase);
+    showToastMessage("Library dynamic database loaded successfully!");
+  }
+
+  function renderLibraryTableGrid(recordsList) {
+    const tbody = document.getElementById('elsTableBody');
+    const tableInfo = document.getElementById('elsTableInfo');
+    const prevBtn = document.getElementById('elsPrevBtn');
+    const nextBtn = document.getElementById('elsNextBtn');
+    
+    tbody.innerHTML = '';
+
+    if (!hasLoadedLibraryData || recordsList.length === 0) {
+      tbody.innerHTML = `
+        <tr class="els-empty-row">
+          <td colspan="8" class="els-empty-msg">No data available in table</td>
+        </tr>`;
+      tableInfo.textContent = "Showing 0 to 0 of 0 entries";
+      prevBtn.classList.add('disabled'); prevBtn.disabled = true;
+      nextBtn.classList.add('disabled'); nextBtn.disabled = true;
+      return;
+    }
+
+    recordsList.forEach(record => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><button class="els-action-btn" onclick="viewDocumentRecord(${record.id})">View</button></td>
+        <td>${record.type}</td>
+        <td><strong>${record.title}</strong></td>
+        <td>${record.refNo}</td>
+        <td>${record.dept}</td>
+        <td>${record.date}</td>
+        <td><span class="els-badge">${record.tags || 'General'}</span></td>
+        <td>${record.author}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    tableInfo.textContent = `Showing 1 to ${recordsList.length} of ${recordsList.length} entries`;
+    prevBtn.classList.remove('disabled'); prevBtn.disabled = false;
+    nextBtn.classList.remove('disabled'); nextBtn.disabled = false;
+  }
+
+  function filterLibraryTable(searchQuery) {
+    if (!hasLoadedLibraryData) return;
+    const query = searchQuery.toLowerCase().trim();
+    
+    const filtered = libraryDatabase.filter(item => 
+      item.title.toLowerCase().includes(query) ||
+      item.refNo.toLowerCase().includes(query) ||
+      item.dept.toLowerCase().includes(query) ||
+      item.type.toLowerCase().includes(query)
+    );
+    renderLibraryTableGrid(filtered);
+  }
+
+  function handleCreateLibraryRecord(event) {
+    event.preventDefault();
+    
+    const newRecord = {
+      id: libraryDatabase.length + 1,
+      type: document.getElementById('formDocType').value,
+      title: document.getElementById('formTitle').value,
+      refNo: document.getElementById('formRefNum').value,
+      dept: document.getElementById('formDept').value,
+      date: document.getElementById('formDate').value,
+      tags: document.getElementById('formTags').value,
+      author: "Admin User"
+    };
+
+    libraryDatabase.unshift(newRecord); // Push new entries cleanly to the front of the database array
+    document.getElementById('newLibraryRecordForm').reset();
+    
+    // Fall back to main record pane cleanly
+    showPage('library');
+    if (hasLoadedLibraryData) {
+      renderLibraryTableGrid(libraryDatabase);
+    }
+    showToastMessage("New document entry cataloged successfully!");
+  }
+
+  function viewDocumentRecord(docId) {
+    const doc = libraryDatabase.find(d => d.id === docId);
+    if(doc) {
+      alert(`Document Quick Review:\n\nTitle: ${doc.title}\nRef Code: ${doc.refNo}\nDepartment: ${doc.dept}\nDate: ${doc.date}`);
+    }
+  }
+
+  function showToastMessage(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  // Standard legacy modal form inputs map handler
+  const formFieldsMap = {
+    'Travel Order Request': [
+      {label: 'Travel Date (From)', type: 'date'},
+      {label: 'Travel Date (To)', type: 'date'},
+      {label: 'Destination', type: 'text'},
+      {label: 'Purpose of Travel', type: 'textarea'}
+    ],
+    'Personal Information': [
+      {label: 'First Name', type: 'text', val: 'Carlo'},
+      {label: 'Last Name', type: 'text', val: 'Bulayan'}
+    ]
+  };
+
+  function openFormModal(formName) {
+    closeAllDropdowns();
+    const title = document.getElementById('generic-modal-title');
+    const body = document.getElementById('generic-modal-body');
+    title.textContent = formName;
+
+    const fields = formFieldsMap[formName] || [
+      {label: 'Reference Code/ID', type: 'text'},
+      {label: 'Remarks/Notes', type: 'textarea'}
+    ];
+
+    let html = '';
+    fields.forEach(f => {
+      html += `<div class="modal-form-group"><label>${f.label}</label>`;
+      if (f.type === 'textarea') {
+        html += `<textarea></textarea>`;
+      } else {
+        html += `<input type="${f.type}" value="${f.val || ''}">`;
+      }
+      html += `</div>`;
+    });
+
+    html += `<div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('generic-modal')">Cancel</button>
+      <button class="btn-primary" onclick="submitData()">Submit</button>
+    </div>`;
+
+    body.innerHTML = html;
+    document.getElementById('generic-modal').classList.add('show');
+  }
+
+  function submitData() {
+    closeModal('generic-modal');
+    showToastMessage("Form process updated successfully!");
+  }
+</script>
+</body>
+</html>
