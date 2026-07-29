@@ -94,18 +94,25 @@
     background:#f4f7f5;
   }
   #login-page .media-track{
-    display:flex;
+    position:relative;
     height:100%;
-    align-items:center;
-    transition: transform .8s cubic-bezier(.65,0,.35,1);
   }
   #login-page .media-track img{
-    flex:0 0 100%;
+    position:absolute;
+    top:0;
+    left:0;
     width:100%;
     height:100%;
     object-fit:contain;
     padding:24px;
     display:block;
+    opacity:0;
+    transition: opacity 1s ease-in-out;
+    pointer-events:none;
+  }
+  #login-page .media-track img.active{
+    opacity:1;
+    pointer-events:auto;
   }
   #login-page .media-dots{
     position:absolute;
@@ -155,6 +162,15 @@
     object-fit:contain;
     display:block;
   }
+  .welcome-logo {
+    max-height: 50px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+    margin-left: auto; /* Pushes the logo to the right */
+  }
+
 
   #login-page .portal-title{
     font-size:16px;
@@ -298,7 +314,7 @@
 
   @media (prefers-reduced-motion: reduce){
     #login-page *{ transition:none !important; }
-    #login-page .media-track{ transition:none; }
+    #login-page .media-track img{ transition:none; }
   }
 
   @media (max-width: 900px){
@@ -487,8 +503,8 @@
   .content {
     flex: 1;
     width: 100%;
-    max-width: 1600px;
-    margin: 0 auto;
+    max-width: 100%;
+    margin: 0;
     padding: clamp(14px, 2.5vw, 24px);
     display: flex;
     flex-wrap: wrap;
@@ -499,6 +515,32 @@
 
   .page { display: none; }
   .page.active { display: block; }
+
+  /* Dashboard page: stretch to match the sidebar's full height (down to the
+     footer) and split that height between the bulletin and approvals cards,
+     with the bulletin board getting the lion's share of the extra space. */
+  #page-dashboard.page.active {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    gap: clamp(14px, 2vw, 20px);
+  }
+  #page-dashboard .bulletin-panel {
+    flex: 3 1 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+    margin-bottom: 0;
+  }
+  #page-dashboard .approval-panel {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+  }
 
   /* Unified Panel Layout */
   .card {
@@ -513,7 +555,7 @@
     display: flex; align-items: center; gap: 8px;
   }
 
-  /* Bulletin Board Slider — shows 3 pictures per page; slides between pages when more than 3 are added */
+ /* Bulletin Board Slider — Slide Effect */
   .bulletin-slider {
     position: relative;
     width: 100%;
@@ -521,19 +563,21 @@
   }
   .bulletin-slider-track {
     display: flex;
-    transition: transform .6s cubic-bezier(.65,0,.35,1);
+    transition: transform 0.6s cubic-bezier(.65,0,.35,1);
   }
   .bulletin-page {
     flex: 0 0 100%;
+    width: 100%;
     min-width: 0;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: clamp(14px, 2vw, 20px);
   }
+
   .bulletin-card { text-align: center; min-width: 0; }
   .bulletin-card-img {
     width: 100%;
-    aspect-ratio: 16/11;
+    aspect-ratio: 4/3;
     border-radius: var(--r-md);
     overflow: hidden;
     border: 1px solid var(--border);
@@ -543,8 +587,31 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
   .bulletin-card-img:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
+  .bulletin-card-img { cursor: pointer; position: relative; }
+  .bulletin-card-img::before {
+    content: attr(data-title);
+    position: absolute;
+    top: 10px; left: 10px;
+    max-width: calc(100% - 20px);
+    padding: 5px 10px;
+    font-size: 10.5px; font-weight: 700; color: #fff;
+    text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.3;
+    background: rgba(16,24,40,0.68);
+    border-radius: 6px;
+    z-index: 2;
+  }
+  .bulletin-card-img::after {
+    content: "View details";
+    position: absolute; inset: auto 0 0 0;
+    padding: 6px 8px;
+    font-size: 10.5px; font-weight: 700; color: #fff;
+    background: linear-gradient(to top, rgba(16,24,40,0.75), rgba(16,24,40,0));
+    text-align: center;
+    opacity: 0; transition: opacity 0.2s ease;
+  }
+  .bulletin-card-img:hover::after { opacity: 1; }
   .bulletin-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .bulletin-card-name { font-size: 12px; font-weight: 700; color: var(--text-dark); text-transform: uppercase; letter-spacing: 0.05em; }
+  .bulletin-card-name { display: none; }
   .bulletin-slider-dots { display: flex; justify-content: center; gap: 8px; margin-top: 18px; }
   .bulletin-slider-dots span {
     width: 6px; height: 6px; border-radius: 50%;
@@ -574,6 +641,7 @@
   .welcome-card { padding: clamp(18px, 3vw, 24px); }
   .welcome-header {
     display: flex;
+    flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
@@ -590,7 +658,7 @@
   .welcome-brand { text-align: right; flex-shrink: 0; }
   .welcome-brand-name {
     font-family: 'Nunito', 'Inter', sans-serif;
-    font-size: 20px;
+    font-size: 5px;
     font-weight: 800;
     color: var(--green-primary);
     letter-spacing: 0.02em;
@@ -780,8 +848,7 @@
     .profile-header { gap: 14px; }
     .site-footer { justify-content: center; text-align: center; }
     .site-footer .footer-org { text-align: center; }
-    .welcome-header { flex-direction: column; align-items: flex-start; gap: 10px; }
-    .welcome-brand { text-align: left; }
+    .welcome-header { flex-wrap: wrap; gap: 10px; }
   }
 </style>
 </head>
@@ -876,18 +943,21 @@
   // auto-sliding announcement picture
   const track = document.getElementById('mediaTrack');
   const dots = document.querySelectorAll('#mediaDots span');
-  const slideCount = track.children.length;
+  const slides = track.querySelectorAll('img');
+  const slideCount = slides.length;
   let current = 0;
 
   function goTo(i){
     current = i;
-    track.style.transform = `translateX(-${current * 100}%)`;
+    slides.forEach((img, idx) => img.classList.toggle('active', idx === current));
     dots.forEach((d, idx) => d.classList.toggle('active', idx === current));
   }
 
+  goTo(0);
+
   setInterval(() => {
     goTo((current + 1) % slideCount);
-  }, 4000);
+  }, 5000);
 </script>
 
 <!-- Main System Portal Wrapper -->
@@ -995,16 +1065,87 @@
   <div class="content">
     <div class="main-content">
       <div class="page active" id="page-dashboard">
-        <div class="card" style="margin-bottom: 20px;">
+        <div class="card bulletin-panel">
           <div class="card-title">Bulletin Board</div>
           <div class="bulletin-slider" aria-label="Bulletin announcements">
-            <div class="bulletin-slider-track" id="bulletinTrack"></div>
+            <div class="bulletin-slider-track" id="bulletinTrack">
+              <div class="bulletin-page active">
+                <div class="bulletin-card">
+                  <div class="bulletin-card-img" onclick="openBulletinDetail(this)"
+                       data-title="Scam Warning Advisory"
+                       data-desc="Reminder to all employees: verify the identity of any caller or sender before sharing account details, OTPs, or credentials. Agribank will never ask for your password through calls, emails, or messages.">
+                    <img src="ChatGPT Image Jul 23, 2026, 11_50_54 AM.png" alt="Scam Warning Advisory">
+                  </div>
+                  <div class="bulletin-card-name">Scam Warning Advisory</div>
+                </div>
+                <div class="bulletin-card">
+                  <div class="bulletin-card-img" onclick="openBulletinDetail(this)"
+                       data-title="Copy-Paste Advisory"
+                       data-desc="Avoid copying and pasting commands or links from unverified sources, especially in remote support or terminal sessions. This is a common vector for malware and account takeover attacks.">
+                    <img src="ChatGPT Image Jul 23, 2026, 11_50_54 AM.png" alt="Copy-Paste Advisory">
+                  </div>
+                  <div class="bulletin-card-name">Copy-Paste Advisory</div>
+                </div>
+                <div class="bulletin-card">
+                  <div class="bulletin-card-img" onclick="openBulletinDetail(this)"
+                       data-title="Agribank Announcement"
+                       data-desc="Stay updated with the latest news, memos, and updates from Agribank's Employee Portal. Check this board regularly for important company-wide announcements.">
+                    <img src="ChatGPT Image Jul 23, 2026, 11_50_54 AM.png" alt="Agribank Announcement">
+                  </div>
+                  <div class="bulletin-card-name">Agribank Announcement</div>
+                </div>
+              </div>
+              <!--
+                SAMPLE PAGE 2 — added just so you can see the slide transition in
+                action (with only 1 page there's nothing to slide between). Delete
+                this whole .bulletin-page block once you add your own real photos,
+                or just replace the 3 cards inside it with your own.
+              -->
+              <div class="bulletin-page">
+                <div class="bulletin-card">
+                  <div class="bulletin-card-img" onclick="openBulletinDetail(this)"
+                       data-title="Sample: Holiday Schedule"
+                       data-desc="SAMPLE CARD — this is placeholder content so you can confirm the bulletin board slides automatically between pages. Replace this with a real photo and description.">
+                    <img src="ChatGPT Image Jul 23, 2026, 11_50_54 AM.png" alt="Sample: Holiday Schedule">
+                  </div>
+                  <div class="bulletin-card-name">Sample: Holiday Schedule</div>
+                </div>
+                <div class="bulletin-card">
+                  <div class="bulletin-card-img" onclick="openBulletinDetail(this)"
+                       data-title="Sample: Training Reminder"
+                       data-desc="SAMPLE CARD — this is placeholder content so you can confirm the bulletin board slides automatically between pages. Replace this with a real photo and description.">
+                    <img src="ChatGPT Image Jul 23, 2026, 11_50_54 AM.png" alt="Sample: Training Reminder">
+                  </div>
+                  <div class="bulletin-card-name">Sample: Training Reminder</div>
+                </div>
+                <div class="bulletin-card">
+                  <div class="bulletin-card-img" onclick="openBulletinDetail(this)"
+                       data-title="Sample: IT Maintenance Notice"
+                       data-desc="SAMPLE CARD — this is placeholder content so you can confirm the bulletin board slides automatically between pages. Replace this with a real photo and description.">
+                    <img src="ChatGPT Image Jul 23, 2026, 11_50_54 AM.png" alt="Sample: IT Maintenance Notice">
+                  </div>
+                  <div class="bulletin-card-name">Sample: IT Maintenance Notice</div>
+                </div>
+              </div>
+              <!--
+                To add more announcements: copy one of the .bulletin-card blocks
+                above and paste it inside a .bulletin-page (max 3 per page look best).
+                To add a whole new page (so it slides in on rotation): copy an
+                entire .bulletin-page block and paste it after the others. That's
+                it — the dot and the slide transition are created automatically
+                by the script, no need to add anything else.
+                Each photo's popup uses the data-title and data-desc attributes
+                on its .bulletin-card-img — edit those to change what shows when
+                someone clicks the photo.
+              -->
+            </div>
           </div>
           <div class="bulletin-slider-dots" id="bulletinDots"></div>
         </div>
 
 
-        <div class="card">
+
+        <div class="card approval-panel">
           <div class="approvals-row">
             <div class="approval-block">
               <h4>Approvals</h4>
@@ -1035,7 +1176,7 @@
         <div class="welcome-header">
           <h2 class="welcome-title">Welcome, <span id="user-first-name">Fritz</span></h2>
           <div class="welcome-brand">
-            <span class="welcome-brand-name">AGRIBANK</span>
+            <img src="ABC-RB  - APPROVED  LOGO - FULL COLOR-07.png" alt="Agribank Logo" class="welcome-logo">
           </div>
         </div>
 
@@ -1044,8 +1185,8 @@
           <div class="access-group">
             <div class="access-group-label">General</div>
             <ul class="access-links">
-              <li><a class="access-item" href="https://library.agribank.com.ph/Login" target="_blank" rel="noopener">E-Library</a></li>
-              <li><a class="access-item" href="https://eportal.agribank.com.ph/Login" target="_blank" rel="noopener">E-portal (old)</a></li>
+              <li><a class="access-item" href="https://eportal-old.agribank.com.ph/" target="_blank" rel="noopener">E-Library</a></li>
+              <li><a class="access-item" href="https://elibrary.agribank.com.ph/" target="_blank" rel="noopener">E-portal (old)</a></li>
               <li><a class="access-item" href="https://foa.agribank.com.ph/" target="_blank" rel="noopener">FOA</a></li>
             </ul>
           </div>
@@ -1110,80 +1251,56 @@
 
 <script>
   /* ==========================================================================
-     BULLETIN BOARD — 3 pictures per page. Add more entries to this array and
-     it will automatically paginate into extra pages and start sliding
-     between them once there are more than 3 pictures in total.
+     BULLETIN BOARD — the pictures now live directly in the HTML above
+     (inside #bulletinTrack, as .bulletin-page > .bulletin-card blocks).
+     This script auto-detects however many .bulletin-page blocks exist and
+     slides between them — it does not need to be touched when you add or
+     remove photos. To add a new rotating page, just copy a .bulletin-page
+     block in the HTML above and paste another one after it; the dot and
+     slide transition are created automatically.
      ========================================================================== */
-  const bulletinBoardImages = [
-    {
-      title: 'Scam Warning Advisory',
-      alt: 'Scam Warning Advisory',
-      src: 'ChatGPT Image Jul 23, 2026, 05_33_12 PM.png',
-      fallback: "data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 280%22><rect width=%22400%22 height=%22280%22 fill=%22%231F5C2B%22/><text x=%2250%25%22 y=%2246%25%22 text-anchor=%22middle%22 font-family=%22Arial, sans-serif%22 font-weight=%22800%22 font-size=%2219%22 fill=%22%23ffffff%22>Scam Warning</text><text x=%2250%25%22 y=%2258%25%22 text-anchor=%22middle%22 font-family=%22Arial, sans-serif%22 font-size=%2212%22 fill=%22%23E8B62C%22>Verify before you click</text></svg>"
-    },
-    {
-      title: 'Copy-Paste Advisory',
-      alt: 'Copy-Paste Advisory',
-      src: 'ChatGPT Image Jul 23, 2026, 05_24_35 PM.png',
-      fallback: "data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 280%22><rect width=%22400%22 height=%22280%22 fill=%22%232A7A3B%22/><text x=%2250%25%22 y=%2246%25%22 text-anchor=%22middle%22 font-family=%22Arial, sans-serif%22 font-weight=%22800%22 font-size=%2219%22 fill=%22%23ffffff%22>Copy-Paste</text><text x=%2250%25%22 y=%2258%25%22 text-anchor=%22middle%22 font-family=%22Arial, sans-serif%22 font-size=%2212%22 fill=%22%23F1EEE9%22>Think before you paste</text></svg>"
-    },
-    {
-      title: 'Agribank Announcement',
-      alt: 'Agribank Announcement',
-      src: 'Untitled design (10).png',
-      fallback: "data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 280%22><rect width=%22400%22 height=%22280%22 fill=%22%23173D1E%22/><text x=%2250%25%22 y=%2246%25%22 text-anchor=%22middle%22 font-family=%22Arial, sans-serif%22 font-weight=%22800%22 font-size=%2219%22 fill=%22%23ffffff%22>AGRIBANK</text><text x=%2250%25%22 y=%2258%25%22 text-anchor=%22middle%22 font-family=%22Arial, sans-serif%22 font-size=%2212%22 fill=%22%2338924A%22>Employee Announcements</text></svg>"
-    }
-    // Add a 4th, 5th, etc. entry here (same shape as above) and the board
-    // will automatically create a new page and start sliding between pages.
-  ];
-
   const bulletinTrack = document.getElementById('bulletinTrack');
   const bulletinDotsEl = document.getElementById('bulletinDots');
+  const bulletinPages = bulletinTrack.querySelectorAll('.bulletin-page');
   let bulletinCurrent = 0;
-  let bulletinInterval = null;
 
-  function renderBulletinBoard(images) {
-    const perPage = 3;
-    const pages = [];
-    for (let i = 0; i < images.length; i += perPage) {
-      pages.push(images.slice(i, i + perPage));
-    }
-    if (pages.length === 0) pages.push([]);
-
-    bulletinTrack.innerHTML = pages.map(page => {
-      const cards = page.map(item => `
-        <div class="bulletin-card">
-          <div class="bulletin-card-img">
-            <img src="${item.src}" alt="${item.alt}" onerror="this.onerror=null;this.src='${item.fallback}';">
-          </div>
-          <div class="bulletin-card-name">${item.title}</div>
-        </div>
-      `).join('');
-      return `<div class="bulletin-page">${cards}</div>`;
-    }).join('');
-
-    bulletinDotsEl.innerHTML = pages.length > 1
-      ? pages.map((_, idx) => `<span onclick="bulletinGoTo(${idx})"></span>`).join('')
-      : '';
-
-    if (bulletinInterval) { clearInterval(bulletinInterval); bulletinInterval = null; }
-    bulletinCurrent = 0;
-    bulletinGoTo(0);
-
-    if (pages.length > 1) {
-      bulletinInterval = setInterval(() => {
-        bulletinGoTo((bulletinCurrent + 1) % pages.length);
-      }, 4000);
-    }
-  }
+  // Auto-build the dots to match however many pages exist in the HTML
+  bulletinDotsEl.innerHTML = bulletinPages.length > 1
+    ? Array.from(bulletinPages).map((_, idx) => `<span class="${idx === 0 ? 'active' : ''}" onclick="bulletinGoTo(${idx})"></span>`).join('')
+    : '';
 
   function bulletinGoTo(i) {
     bulletinCurrent = i;
     bulletinTrack.style.transform = `translateX(-${bulletinCurrent * 100}%)`;
-    document.querySelectorAll('#bulletinDots span').forEach((d, idx) => d.classList.toggle('active', idx === bulletinCurrent));
+    bulletinDotsEl.querySelectorAll('span').forEach((d, idx) => {
+      d.classList.toggle('active', idx === bulletinCurrent);
+    });
   }
 
-  renderBulletinBoard(bulletinBoardImages);
+  if (bulletinPages.length > 1) {
+    setInterval(() => {
+      bulletinGoTo((bulletinCurrent + 1) % bulletinPages.length);
+    }, 4000);
+  }
+
+  function openBulletinDetail(el) {
+    const title = el.getAttribute('data-title') || 'Announcement';
+    const desc = el.getAttribute('data-desc') || '';
+    const imgEl = el.querySelector('img');
+    const src = imgEl ? imgEl.src : '';
+
+    document.getElementById('generic-modal-title').textContent = title;
+    document.getElementById('generic-modal-body').innerHTML = `
+      <div style="text-align:center;">
+        <img src="${src}" alt="${title}" style="width:100%; max-height:280px; object-fit:cover; border-radius: var(--r-md); border: 1px solid var(--border); margin-bottom: 16px;">
+        <p style="text-align:left; font-size: 13px; line-height: 1.6; color: var(--text-dark); margin-bottom: 20px;">${desc}</p>
+        <div class="modal-actions" style="justify-content: center;">
+          <button class="btn-secondary" onclick="closeModal('generic-modal')">Close</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('generic-modal').classList.add('show');
+  }
 
   function doLogin() {
     const u = document.getElementById('username').value.trim();
