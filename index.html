@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agribank Employee Portal</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     /* Brand */
@@ -47,7 +47,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { -webkit-text-size-adjust: 100%; }
   body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-weight: 400;
     letter-spacing: -0.01em;
     background: var(--gray-bg);
@@ -197,7 +197,7 @@
     border:1.3px solid var(--login-line);
     border-radius:5px;
     font-size:13.5px;
-    font-family:'Inter',sans-serif;
+    font-family: 'Poppins', sans-serif;
     color:var(--login-ink-900);
     background:#fff;
     transition: border-color .15s ease, box-shadow .15s ease;
@@ -233,7 +233,7 @@
     border-radius:6px;
     background:var(--login-green-700);
     color:#fff;
-    font-family:'Inter',sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-weight:700;
     font-size:14px;
     letter-spacing:0.2px;
@@ -370,7 +370,7 @@
     padding: 3px;
   }
   .nav-logo { display: flex; align-items: center; gap: 10px; min-width: 0; }
-  .nav-logo span { color: rgb(255, 255, 255); font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap; }
+  .nav-logo span { color: rgb(255, 255, 255); font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap; }
   .nav-spacer { flex: 1; min-width: 8px; }
 
   /* User Profile Nav */
@@ -657,7 +657,7 @@
   .welcome-title span { color: var(--green-primary); }
   .welcome-brand { text-align: right; flex-shrink: 0; }
   .welcome-brand-name {
-    font-family: 'Nunito', 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 5px;
     font-weight: 800;
     color: var(--green-primary);
@@ -850,6 +850,67 @@
     .site-footer .footer-org { text-align: center; }
     .welcome-header { flex-wrap: wrap; gap: 10px; }
   }
+  /* ===== Top bar & footer (same look as the ELS portal) ===== */
+  .top-menu-area { background: var(--nav-bg-dark); font-family: 'Poppins', sans-serif; }
+  .hdr-box { max-width: 1605px; padding: 0 15px; background: var(--nav-bg); border: solid rgba(255,255,255,0.12); border-width: 0 1px 1px 1px; }
+  .hdr-box .container-fluid { padding-left: 0; padding-right: 0; }
+  .hdr-box .top-navbar { height: 63px; }
+  .hdr-box .sidebar-brand-icon { width: 46px; height: 46px; }
+  .hdr-box .nav-logo span { font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0; }
+  .hdr-box .nav-user { background: none; border: 0; width: 28px; height: 28px; }
+  .hdr-box .bottom-navbar .container-fluid { min-height: 48px; }
+  .hdr-box .menu-item { padding: 0 10px; min-height: 48px; gap: 4px; border-radius: 0; }
+  .hdr-box .user-dropdown { width: 250px; border-radius: 10px; padding: 8px 0; box-shadow: 0 8px 24px rgba(0,0,0,0.18); }
+  .ud-head { display: flex; align-items: center; gap: 12px; padding: 12px 16px 14px; color: #1b3a3a; font-size: 13px; cursor: default; }
+  .ud-av { width: 30px; height: 30px; border-radius: 50%; background: #e9ecef; display: flex; align-items: center; justify-content: center; flex: none; color: #4b5563; }
+  .user-dropdown-item.ud-row { gap: 10px; padding: 8px 16px; color: #4b5563; border-radius: 0; }
+  .ud-row svg { color: var(--green-primary); flex: none; }
+  .user-dropdown-item.ud-row.logout { border-top: 0; margin-top: 0; padding-top: 8px; color: #6b7280; }
+  .user-dropdown-item.ud-row.logout:hover { background: var(--green-50); color: var(--green-dark); }
+
+  .site-footer { margin-top: 0; background: none; border-top: 0; display: block; padding: 0 clamp(14px, 2.5vw, 24px) 20px; }
+  .site-footer .footer-card { width: 100%; margin: 0; padding: 16px 20px; background: #fff; border: 1px solid #e3e6f0; border-radius: 4px; font-size: 13px; color: #333; }
+  /* ===== Typography: Poppins · headers 16px · content 14px ===== */
+  html, body, button, input, textarea, select { font-family: 'Poppins', sans-serif; }
+  body { font-size: 14px; }
+  /* headers = 16px */
+  .card-title, .approval-block h4, .access-title, .welcome-title, .modal-header h3,
+  #login-page .portal-title, #login-page .advisories h4, .hdr-box .nav-logo span { font-size: 16px; font-weight: 600; }
+  /* content = 14px */
+  .menu-item, .dropdown-item, .user-dropdown-item, .ud-head, .approval-row, .access-group-label, .access-item,
+  .adv-title, .adv-desc, .ratings-box, .info-field span, .modal-form-group label,
+  .modal-form-group input, .modal-form-group textarea, .btn-primary, .btn-secondary, .toast,
+  .site-footer .footer-card, .site-footer,
+  #login-page .field-row label, #login-page .field-row input, #login-page .btn-login,
+  #login-page .advisory-item b, #login-page .advisory-item span, #login-page .concern-text,
+  #login-page .show-pass-row button { font-size: 14px; }
+  /* small supporting text */
+  .badge, #login-page .advisories .caption, .info-field label, .bulletin-card-img::before, .bulletin-card-img::after { font-size: 12px; }
+  .dropdown-title { font-size: 14px; }
+
+  /* ===== UI fixes ===== */
+  #login-page { min-height: 100vh; min-height: 100dvh; }
+  .menu-item:focus-visible, .dropdown-item:focus-visible, .user-dropdown-item:focus-visible, .nav-user:focus-visible,
+  .bulletin-card-img:focus-visible { outline: 2px solid var(--green-light); outline-offset: 2px; }
+  @media (max-width: 1024px) {
+    /* stacked layout: cards must size to their content instead of collapsing/overlapping */
+    .main-content { flex: 1 1 100%; width: 100%; }
+    #page-dashboard.page.active { flex: none; }
+    #page-dashboard .bulletin-panel, #page-dashboard .approval-panel { flex: none; min-height: auto; justify-content: flex-start; }
+    .sidebar { flex: 1 1 100%; min-width: 0; }
+  }
+  @media (max-width: 640px) { .hdr-box .nav-logo span { font-size: 14px; } }
+  /* ===== Alignment: header, cards and footer share one centered width ===== */
+  .content { max-width: 1605px; margin: 0 auto; }
+  .hdr-box { padding-left: clamp(14px, 2.5vw, 24px); padding-right: clamp(14px, 2.5vw, 24px); }
+  .site-footer { width: 100%; max-width: 1605px; margin: auto auto 0; padding: 0 clamp(14px, 2.5vw, 24px) 20px; }
+  .site-footer .footer-card { max-width: none; margin: 20px 0 0; }
+  /* ===== Cards & footer extend slightly past the header box (desktop) ===== */
+  :root { --g: clamp(14px, 2.5vw, 24px); --hdr-inset: 16px; }
+  @media (min-width: 1025px) {
+    .content, .site-footer { max-width: calc(1605px + 2 * var(--g) + 2 * var(--hdr-inset)); }
+    .hdr-box { width: calc(100% - 2 * var(--g) - 2 * var(--hdr-inset)); max-width: 1605px; }
+  }
 </style>
 </head>
 <body>
@@ -964,7 +1025,7 @@
 <div id="portal">
   <!-- ===== TWO-TIER HORIZONTAL MENU SYSTEM ===== -->
   <div class="top-menu-area">
-    <div class="container-fluid">
+    <div class="container-fluid hdr-box">
       <div class="row">
         <div class="col-12">
           <div class="horizontal-menu">
@@ -982,10 +1043,12 @@
 
                 <!-- Profile Action Menu Container -->
                 <div class="nav-user-container">
-                  <div class="nav-user" onclick="toggleUserDropdown(event)" title="Account Menu">👤</div>
+                  <div class="nav-user" onclick="toggleUserDropdown(event)" title="Account Menu"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M6.2 19c1.5-2.4 3.5-3.4 5.8-3.4s4.3 1 5.8 3.4"/></svg></div>
                   <div class="user-dropdown" id="user-dropdown">
-                    <div class="user-dropdown-item" onclick="openFormModal('profile')">My Profile</div>
-                    <div class="user-dropdown-item logout" onclick="doLogout()">Sign Out</div>
+                    <div class="ud-head"><span class="ud-av"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></span><strong>CHRISTIAN ULAYAN</strong></div>
+                    <div class="user-dropdown-item ud-row" onclick="openFormModal('profile')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>My profile</div>
+                    <div class="user-dropdown-item ud-row" onclick="openPwd()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Change Password</div>
+                    <div class="user-dropdown-item ud-row logout" onclick="doLogout()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>Sign-out</div>
                   </div>
                 </div>
 
@@ -997,11 +1060,11 @@
               <div class="container-fluid">
 
                 <div class="menu-item active" id="menu-dashboard" onclick="showPage('dashboard')">
-                  Dashboard
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Dashboard
                 </div>
 
                 <div class="menu-item" id="menu-myrecords" onmouseenter="showDropdown('records-dd')" onmouseleave="hideDropdown('records-dd')">
-                  My Records ▾
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>My Records<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
                   <div class="dropdown-menu records-mega" id="records-dd">
                     <div class="dropdown-column">
                       <div class="dropdown-item" onclick="openFormModal(this.innerText.trim())">My Payables(AR)</div>
@@ -1023,7 +1086,7 @@
                 </div>
 
                 <div class="menu-item" id="menu-eforms" onmouseenter="showDropdown('eforms-dd')" onmouseleave="hideDropdown('eforms-dd')">
-                  E-Forms ▾
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h6"/></svg>E-Forms<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
                   <div class="dropdown-menu eforms-mega" id="eforms-dd">
                     <div class="dropdown-column">
                       <div class="dropdown-title">Travel Order</div>
@@ -1230,8 +1293,7 @@
   </div>
 
   <div class="site-footer">
-    <span class="footer-brand">Employee Portal</span>
-    <span class="footer-org">Agribusiness Banking Corporation – A Rural Bank</span>
+    <div class="footer-card">AGRIBUSINESS RURAL BANK, INC. | Employee Portal</div>
   </div>
 </div>
 
@@ -1300,10 +1362,28 @@
     document.getElementById('generic-modal').classList.add('show');
   }
 
+  let PWD = 'admin';
+  function flash(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+  function openPwd() {
+    document.getElementById('generic-modal-title').textContent = 'Change Password';
+    document.getElementById('generic-modal-body').innerHTML = ['Current Password', 'New Password', 'Confirm New Password'].map((t, i) => `<div class="modal-form-group"><label>${t}</label><input type="password" id="pw${i}"></div>`).join('') + '<div class="modal-actions"><button class="btn-secondary" onclick="closeModal(\'generic-modal\')">Cancel</button><button class="btn-primary" onclick="savePwd()">Update Password</button></div>';
+    document.getElementById('generic-modal').classList.add('show');
+  }
+  function savePwd() {
+    const [a, b, c] = [0, 1, 2].map(i => document.getElementById('pw' + i).value);
+    if (a !== PWD) return flash('Current password is incorrect.');
+    if (b.length < 6) return flash('New password must be at least 6 characters.');
+    if (b !== c) return flash('New passwords do not match.');
+    PWD = b; closeModal('generic-modal'); flash('Password changed.');
+  }
   function doLogin() {
     const u = document.getElementById('username').value.trim();
     const p = document.getElementById('password').value.trim();
-    if (u === 'admin' && p === 'admin') {
+    if (u === 'admin' && p === PWD) {
       document.getElementById('login-page').style.display = 'none';
       document.getElementById('portal').style.display = 'flex';
       document.getElementById('login-error').style.display = 'none';
@@ -1413,6 +1493,18 @@
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 2500);
   }
+
+  // Keyboard access: menus are focusable and open with Enter/Space; Esc closes menus and dialogs
+  const KB = '.menu-item, .dropdown-item, .user-dropdown-item, .nav-user, .bulletin-card-img';
+  document.querySelectorAll(KB).forEach(el => { el.tabIndex = 0; el.setAttribute('role', 'button'); });
+  document.addEventListener('keydown', e => {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches(KB)) { e.preventDefault(); e.target.click(); }
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.show').forEach(m => m.classList.remove('show'));
+      document.querySelectorAll('.dropdown-menu.show, .user-dropdown.show').forEach(m => m.classList.remove('show'));
+    }
+  });
 </script>
 </body>
 </html>
+  
